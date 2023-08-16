@@ -1,1 +1,1 @@
-export const localNetwork = 'https://chatapp-api-kkfv.onrender.com';
+export const localNetwork = 'https://chatapp-api-kkfv.onrender.com:3001';
