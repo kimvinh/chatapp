@@ -12,6 +12,8 @@ import { getCurrentTime } from './ChatRoom';
 import './Home.css';
 import '../pages/ChatRoom.css';
 
+axios.defaults.withCredentials = true;
+
 const RegisteredUser = ({ user, handleLogout }) => (
     <div className='home-user-login'>
         <div className='user-info'>
