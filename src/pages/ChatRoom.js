@@ -53,7 +53,7 @@ const ChatRoom = () => {
 
     useEffect(() => {
         if (isLogin) {
-            axios.get(`${localNetwork}:3001/`)
+            axios.get(`${localNetwork}/`)
                 .then((response) => {
                     const friends = [...response.data.user.friends];
                     for (let i = 0; i < friends.length; i++) {
@@ -135,7 +135,7 @@ const ChatRoom = () => {
                     // Update the addFriends state with the updated array
                     setAddFriends(updatedAddFriends);
                     delete friendRequest.beingRequested.userSocketID;
-                    axios.post(`${localNetwork}:3001/addfriend`, {
+                    axios.post(`${localNetwork}/addfriend`, {
                         userID,
                         friendInfo: friendRequest.beingRequested
                     })
@@ -155,7 +155,7 @@ const ChatRoom = () => {
                     }
                     setAddFriends((prev) => [...prev, request])
                     delete friendRequest.requestedFrom.userSocketID;
-                    axios.post(`${localNetwork}:3001/addfriend`, {
+                    axios.post(`${localNetwork}/addfriend`, {
                         userID,
                         friendInfo: friendRequest.requestedFrom
                     })
@@ -192,7 +192,7 @@ const ChatRoom = () => {
                 formData.append('file', file);
 
                 try {
-                    const response = await axios.post(`${localNetwork}:3001/file/upload`, formData, {
+                    const response = await axios.post(`${localNetwork}/file/upload`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         } 

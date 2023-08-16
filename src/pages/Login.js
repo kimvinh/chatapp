@@ -78,7 +78,7 @@ const Login = () => {
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${localNetwork}:3001/users/login`, {
+            const response = await axios.post(`${localNetwork}/users/login`, {
                 username: inputs.username,
                 password: inputs.password
             });

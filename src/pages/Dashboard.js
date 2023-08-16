@@ -52,7 +52,7 @@ const Dashboard = () => {
     const [target, setTarget] = useState(null);
 
     useEffect(() => {
-        axios.get(`${localNetwork}:3001/`)
+        axios.get(`${localNetwork}/`)
             .then((response) => {
                 if (response.data.loggedIn) {
                     const user = response.data.user;
@@ -66,7 +66,7 @@ const Dashboard = () => {
     }, [])
 
     useEffect(() => {
-        axios.get(`${localNetwork}:3001/conversations`)
+        axios.get(`${localNetwork}/conversations`)
             .then((response) => {
                 setChatList(response.data);
             })
@@ -109,7 +109,7 @@ const Dashboard = () => {
             }
             await socket.emit("send_message", messageData);
             delete messageData.roomID;
-            await axios.patch(`${localNetwork}:3001/update_conversation`, {
+            await axios.patch(`${localNetwork}/update_conversation`, {
                 messageData: messageData,
                 conversationID: conversationID
             });
@@ -119,7 +119,7 @@ const Dashboard = () => {
 
     const fetchMessages = async (conversationID) => {
         try {
-            const response = await axios.get(`${localNetwork}:3001/get_messages`, {
+            const response = await axios.get(`${localNetwork}/get_messages`, {
                 params: {
                     conversationID: conversationID
                 }

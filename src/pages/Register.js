@@ -81,7 +81,7 @@ const Register = () => {
                     setShowEmailWarning(false);
                 } else {
                     try {
-                        const response = await axios.post(`${localNetwork}:3001/users/check-availability`, { email: event.target.value });
+                        const response = await axios.post(`${localNetwork}/users/check-availability`, { email: event.target.value });
                         if (response.data === 1) {
                             setInputsValid((prevStatus) => ({
                                 ...prevStatus,
@@ -103,7 +103,7 @@ const Register = () => {
             // Username Case
             case 'username':
                 try {
-                    const response = await axios.post(`${localNetwork}:3001/users/check-availability`, { username: event.target.value });
+                    const response = await axios.post(`${localNetwork}/users/check-availability`, { username: event.target.value });
                     if (response.data === 1) {
                         setInputsValid((prevStatus) => ({
                             ...prevStatus,
@@ -179,7 +179,7 @@ const Register = () => {
 
         try {
             const avatar = await fetchRandomAvatar(inputs.first_name + ' ' + inputs.last_name);
-            const response = await axios.post(`${localNetwork}:3001/users/register`, {
+            const response = await axios.post(`${localNetwork}/users/register`, {
                 first_name: inputs.first_name,
                 last_name: inputs.last_name, 
                 username: inputs.username,

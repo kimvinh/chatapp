@@ -124,7 +124,7 @@ const Home = () => {
     const [avatarURL, setAvatarURL] = useState(null);
 
     useEffect(() => {
-        axios.get(`${localNetwork}:3001/`)
+        axios.get(`${localNetwork}/`)
             .then((response) => {
                 if (response.data.loggedIn === true) {
                     setIsLogin(true);
@@ -199,7 +199,7 @@ const Home = () => {
     };
 
     const handleLogout = () => {
-        axios.post(`${localNetwork}:3001/logout`)
+        axios.post(`${localNetwork}/logout`)
             .then(() => {
                 setUserID('');
                 setIsLogin(false);

@@ -38,7 +38,7 @@ const Profile = () => {
 
     const fetchUserInfo = async () => {
         try {
-            await axios.get(`${localNetwork}:3001/`)
+            await axios.get(`${localNetwork}/`)
                 .then((response) => {
                     if (response.data.loggedIn) {
                         const user = response.data.user;
@@ -108,7 +108,7 @@ const Profile = () => {
     const handleModalBox = (event) => {
         if (event.target.className === 'yes') {
             if (target) {
-                axios.patch(`${localNetwork}:3001/unfriend`, {
+                axios.patch(`${localNetwork}/unfriend`, {
                     user: userInfo,
                     target
                 })
@@ -116,7 +116,7 @@ const Profile = () => {
                         setUserInfo(response.data.user);
                     })
             } else {
-                axios.patch(`${localNetwork}:3001/users/update/${userInfo._id}`, {
+                axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
                     userInfo
                 })
                 fetchUserInfo();
@@ -131,14 +131,14 @@ const Profile = () => {
         const user_1_id = userInfo._id;
         const user_2_id = friend.authorID;
         let conversationID = '';
-        const response = await axios.get(`${localNetwork}:3001/conversation`, {
+        const response = await axios.get(`${localNetwork}/conversation`, {
             params: {
                 user_1_id,
                 user_2_id
             }
         });
         if (response.data.message === 'Not Found') {
-            const result = await axios.post(`${localNetwork}:3001/conversation`, {
+            const result = await axios.post(`${localNetwork}/conversation`, {
                 participants: [user_1_id, user_2_id],
                 messages: [],
                 participantsInfo: [
