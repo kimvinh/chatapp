@@ -1,0 +1,19 @@
+.avatar-profile {
+    width: 75px;
+    height: 75px;
+}
+
+.avatar-profile:hover {
+    border: 2px solid #3b82f6;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.avatar-profile > img {
+    margin: 3px;
+}
+
+.selected {
+    border: 3px solid #3b82f6;
+    border-radius: 50%;
+}

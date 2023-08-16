@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { SocketProvider } from './SocketContext';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
+
+if (process.env.NODE_ENV === 'production') disableReactDevTools();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <SocketProvider>
     <App />
-  </React.StrictMode>
+  </SocketProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

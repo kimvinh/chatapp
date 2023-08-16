@@ -1,0 +1,180 @@
+.home {
+    background-color: #f2f8ff;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+}
+
+.home-logo {
+    margin-top: 20px;
+}
+
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 50px;
+}
+
+.home-user-login {
+    display: flex;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 80px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.user-info:hover {
+    transform: scale(1.1); /* Adjust the scale factor as desired */
+}
+
+.user-info:active {
+    transform: scale(0.9); /* Adjust the scale factor as desired */
+}
+
+.user-info p {
+    margin: 0;
+}
+
+.user-info > a > img {
+    margin-right: 8px;
+}
+
+.user-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+}
+
+.logout-button > .submit-button {
+    width: 100px;
+    border-radius: 5px;
+    background-color: #ef4444;
+    border: none;
+    color: white;
+}
+
+.logout-button > .submit-button:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
+}
+
+.home-body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.home-body-join-room,
+.home-body-link-buttons {
+    width: 30%;
+    background-color: #e6f2ff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 11px;
+    border: 1px solid #a7c6ff;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2), 
+                0px 4px 6px -2px rgba(0, 0, 0, 0.1), 
+                inset 0px 1px 1px 0px rgba(255, 255, 255, 0.5), 
+                inset 0px -1px 1px 0px rgba(0, 0, 0, 0.1);
+    gap: 15px;
+    text-align: center;
+    padding: 0 2% 10px;
+}
+
+.home-body-join-room .submit-button {
+    background-color: #10b981;
+    height: 50px;
+    font-size: 21px;
+    border: none;
+}
+
+.home-body-join-room .submit-button:hover {
+    background-color: #059669;
+    transition: background-color 0.5s ease;
+}
+
+.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e6f2ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    font-size: 25px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.home-body-link-buttons .submit-button {
+    height: 50px;
+    font-size: 21px;
+    transition: background-color 0.5s ease;
+    border: none;
+}
+
+.home-body-link-buttons a:first-of-type .submit-button {
+    color: #333333;
+    background-color: #a7c6ff;
+}
+
+.home-body-link-buttons a:first-of-type .submit-button:hover {
+    background-color: #8fb1ff;
+}
+
+.home-body-link-buttons a:first-of-type .submit-button:active {
+    background-color: #6d97ff;
+}
+
+.home-body-link-buttons a:last-of-type .submit-button {
+    color: #333333;
+    background-color: #b2d6ff;
+}
+
+.home-body-link-buttons a:last-of-type .submit-button:hover {
+    background-color: #9bc3ff;
+}
+
+.home-body-link-buttons a:last-of-type .submit-button:active {
+    background-color: #79a4ff;
+}
+
+.tabs-container {
+    font-size: larger;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.tab {
+    width: 100%;
+    font-size: x-large;
+    padding: 15px 0;
+    cursor: pointer;
+}
+
+.active-tab {
+    border-bottom: 5px solid #7dd3fc;
+    background-color: #eff6ff;
+}
+
+.tab:hover {
+    border-bottom: 5px solid #7dd3fc;
+    transition: border-bottom 0.3s ease-in-out;
+}

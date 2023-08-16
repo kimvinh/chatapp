@@ -1,0 +1,1 @@
+export const localNetwork = 'https://chatapp-api.onrender.com';

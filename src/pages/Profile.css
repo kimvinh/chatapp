@@ -1,0 +1,280 @@
+.profile {
+    background-color: #f2f8ff;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    font-family: 'Lato', sans-serif;
+}
+
+.user-avatar-friends {
+    width: 30%;
+    height: auto;
+    border-right: 2px solid #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-avatar {
+    height: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid #333;
+}
+
+.avatar-frame {
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    border: 5px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: white;
+}
+
+.avatar {
+    margin-top: 20px;
+    font-size: 14.5em;
+}
+
+.user-basic-info {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.user-basic-info p {
+    margin: 0;
+}
+
+.user-friends-container {
+    display: flex;
+    margin: 10px 15px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.friends-header {
+    display: flex;
+    align-items: center;
+}
+
+.friends-header h2 {
+    margin: 0 10px 0 0;
+    font-weight: bold;
+}
+
+.friends-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friend-count {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.friend-search {
+    margin-left: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.friend-search input {
+    padding: 5px 30px 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+    width: 200px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.friend-search input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(128, 165, 217, 0.5);
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-55%);
+}
+
+.fa-magnifying-glass {
+    color: #999;
+}
+
+.list-friends {
+    width: 100%;
+    max-height:450px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.friend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0 10px 15px;
+    margin-top: 3px;
+    /* border: 1px solid black; */
+}
+
+.friend:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.friend:nth-child(odd) {
+    background-color: #f1f5f9;
+}
+
+.friend:hover {
+    background-color: #e2e8f0;
+}
+
+.friend-avatar {
+    width: 56px;
+    height: 56px;
+}
+
+.friend-name > p {
+    margin: 0;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.options-circle {
+    width: 36px;
+    height: 36px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.options-circle > i {
+    font-size: large;
+}
+
+.user-details {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 50px 20px 0;
+    padding: 0 20px;
+    border-bottom: 2px solid #333;
+}
+
+.user-details-header h1 {
+    font-weight: bold;
+}
+
+.user-details-header button {
+    width: 100px;
+    border: none;
+}
+
+.details-edit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.3em;
+}
+
+.details-edit p {
+    margin: 0;
+}
+
+.details-edit:hover {
+    cursor: pointer;
+}
+
+.custom-flex {
+    display: flex;
+    gap: 15px;
+}
+
+.user-details-body {
+    width: 70%;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-details-body-container {
+    width: 100%;
+    /* height: 100%; */
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 5%;
+    row-gap: 60px;
+}
+
+.custom-width {
+    width: 45%;
+}
+
+.form-floating * {
+    font-size: 19px !important;
+}
+
+.form-floating > .form-control, .form-floating > .form-select {
+    height: calc(4.5rem + 2px) !important;
+}
+
+.edit {
+    color: #ffffff;
+    background-color: #4285F4;
+    transition: background-color 0.3s ease;
+}
+
+.edit:hover {
+    background-color: #3367D6;
+}
+
+.cancel {
+    color: #ffffff;
+    background-color: #EF5350;
+    transition: background-color 0.3s ease;
+}
+
+.cancel:hover {
+    background-color: #D32F2F;
+}
+
+.save {
+    color: #ffffff;
+    background-color: #4CAF50;
+    transition: background-color 0.3s ease;
+}
+
+.save:not(:disabled):hover {
+    background-color: #388E3C;
+}
+
+.flex button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

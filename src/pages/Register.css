@@ -1,0 +1,56 @@
+.register {
+    background-color: #f2f8ff;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lato', sans-serif;
+}
+
+.register-container {
+    background-color: #e6f2ff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 11px;
+    border: 1px solid #a7c6ff;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2), 
+                0px 4px 6px -2px rgba(0, 0, 0, 0.1), 
+                inset 0px 1px 1px 0px rgba(255, 255, 255, 0.5), 
+                inset 0px -1px 1px 0px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    min-width: 400px;
+    width: 550px;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-field {
+    width: 85%;
+}
+
+.register-field .form-floating {
+    margin-bottom: 20px;
+}
+
+.register-footer {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.register-footer * {
+    margin-top: 3px;
+    margin-bottom: 0;
+}
+
+#submit-button[disabled] {
+    /* Styles for the button when it is disabled */
+    opacity: 0.5;
+    cursor: not-allowed;
+}

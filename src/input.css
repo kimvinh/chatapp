@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-height {
+    height: 750px;
+}
+
+.people {
+    @apply flex items-center justify-start pl-4 py-2 gap-2
+}
+
+.people-hover {
+    @apply hover:bg-indigo-400 hover:rounded-lg hover:mx-2 hover:pl-2 hover:cursor-pointer;
+}
