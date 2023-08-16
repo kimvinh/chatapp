@@ -5,7 +5,7 @@ import { localNetwork } from './localNetwork';
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-    const socket = io.connect(`${localNetwork}:3001`);
+    const socket = io.connect(`${localNetwork}`);
 
     return (
         <SocketContext.Provider value={socket}>
