@@ -121,7 +121,6 @@ const Profile = () => {
                 })
                 fetchUserInfo();
                 setIsEditing(!isEditing);
-                window.location.reload();
             }
         }
         setShowModalBox(false);
