@@ -116,10 +116,12 @@ const Profile = () => {
                         setUserInfo(response.data.user);
                     })
             } else {
-                await axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
+                axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
                     userInfo
                 })
-                fetchUserInfo();
+                    .then((response) => {
+                        setUserInfo(response.data);
+                    })
                 setIsEditing(!isEditing);
             }
         }
