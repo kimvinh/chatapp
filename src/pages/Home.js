@@ -128,7 +128,6 @@ const Home = () => {
     useEffect(() => {
         axios.get(`${localNetwork}/`)
             .then((response) => {
-                console.log(response);
                 if (response.data.loggedIn === true) {
                     setIsLogin(true);
                     setUserInfo(response.data.user);
