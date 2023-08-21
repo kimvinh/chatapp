@@ -113,7 +113,7 @@ const Profile = () => {
                     target
                 })
                     .then((response) => {
-                        setUserInfo(response.data.user);
+                        setUserInfo(response.data);
                     })
             } else {
                 axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
