@@ -108,7 +108,7 @@ const Profile = () => {
     const handleModalBox = async (event) => {
         if (event.target.className === 'yes') {
             if (target) {
-                await axios.patch(`${localNetwork}/unfriend`, {
+                axios.patch(`${localNetwork}/unfriend`, {
                     user: userInfo,
                     target
                 })
