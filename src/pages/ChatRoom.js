@@ -28,11 +28,10 @@ const ChatRoom = () => {
     const socket = useContext(SocketContext);
     const navigate = useNavigate();
     const focus = useRef(null);
-    const fileInputRef = useRef(null);
+    let fileInputRef = useRef(null);
     const location = useLocation();
     const { userID, fullName, roomID, isLogin } = location.state || {};
     const [hostID, setHostID] = useState('');
-
     const [currentMessage, setCurrentMessage] = useState('');
     const [file, setFile] = useState(null);
     const [messageList, setMessageList] = useState([]);
@@ -177,32 +176,31 @@ const ChatRoom = () => {
             const userIndex = usersList.findIndex((user) => user.authorID === userID);
             let messageData = {};
             if (file) {
-                messageData = {
-                    roomID: roomID,
-                    author: fullName,
-                    authorID: userID,
-                    message: currentMessage,
-                    avatar: usersList[userIndex].avatar,
-                    type: 'file',
-                    path: null,
-                    time: getCurrentTime()
-                }
-
                 const formData = new FormData();
                 formData.append('file', file);
-
+                
                 try {
                     const response = await axios.post(`${localNetwork}/file/upload`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
-                        } 
+                        }
                     });
+
                     const filePath = response.data.filePath;
-                    messageData.path = filePath;
+
+                    messageData = {
+                        roomID: roomID,
+                        authorName: fullName,
+                        authorID: userID,
+                        message: currentMessage,
+                        avatar: usersList[userIndex].avatar,
+                        type: 'file',
+                        path: filePath, // Use the file path from the response
+                        time: getCurrentTime()
+                    };
                 } catch (error) {
                     console.error(error);
-                }
-                
+                }   
             } else {
                 messageData = {
                     roomID: roomID,
@@ -218,6 +216,7 @@ const ChatRoom = () => {
             setShowPicker(false);
             setCurrentMessage('');
             setFile(null);
+            fileInputRef.current.value = null;
         }
     }
 
@@ -250,7 +249,6 @@ const ChatRoom = () => {
                 const time = getCurrentTime();
                 // Disconnect from the current room
                 socket.emit('leave_room', { roomID, userID, fullName, time });
-
                 navigate('/');
             }
         } else if (event.target.className === 'back') {
@@ -276,8 +274,10 @@ const ChatRoom = () => {
 
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
-        setCurrentMessage(file.name);
-        setFile(file);
+        if (file) {
+            setCurrentMessage(file.name);
+            setFile(file);
+        }
     }
 
     const handleTransferKey = (user) => {
@@ -301,36 +301,46 @@ const ChatRoom = () => {
     }
 
     const handleUpdatedAddFriend = (user) => {
-        const addFriend = addFriends.find((request) => request.beingRequested === user || request.requestedFrom === user);
+        const addFriend = addFriends.find((request) => request.beingRequested === user.authorID || request.requestedFrom === user.authorID);
         if (addFriend) {
             if (addFriend.status === 'accept') {
                 return (
-                    <div 
-                        className='px-2 rounded-full bg-gray-50 flex justify-center items-center gap-1 text-blue-500'
-                    >
-                        <i className="fa-solid fa-user-group"></i>
-                        <span className='font-bold'>Friend</span>
+                    <div className='hidden group-hover:flex'>
+                        <div 
+                            className='px-2 rounded-full bg-gray-50 flex justify-center items-center gap-1 text-blue-500'
+                        >
+                            <i className="fa-solid fa-user-group"></i>
+                            <span className='font-bold'>Friend</span>
+                        </div>
                     </div>
                 )
             } else if (addFriend.status === 'pending') {
                 return (
-                    <div 
-                        className='px-2 rounded-full bg-gray-50 flex justify-center items-center text-gray-500'
-                    >
-                        Pending...
+                    <div className='hidden group-hover:flex'>
+                        <div 
+                            className='px-2 rounded-full bg-gray-50 flex justify-center items-center text-gray-500'
+                        >
+                            Pending...
+                        </div>
                     </div>
                 )
             }
         }
-        return (
-            <div 
-                className='w-10 h-10 rounded-full bg-gray-50 flex justify-center items-center hover:bg-gray-100 hover:text-blue-500'
-                title='Add Friend'
-                onClick={() => {handleAddFriend(user)}}
-            >
-                <i className="fa-solid fa-user-plus"></i>
-            </div>
-        )
+        if (user.registered) {
+            return (
+                <div className='hidden group-hover:flex'>
+                    <div 
+                        className='w-10 h-10 rounded-full bg-gray-50 flex justify-center items-center hover:bg-gray-100 hover:text-blue-500'
+                        title='Add Friend'
+                        onClick={() => {handleAddFriend(user.authorID)}}
+                    >
+                        <i className="fa-solid fa-user-plus"></i>
+                    </div>
+                </div>
+            )
+        }
+        return null;
+        
     }
 
     const handleFriendRequest = () => {
@@ -417,11 +427,7 @@ const ChatRoom = () => {
                                             </div>
                                         </div>
                                     )}
-                                    {isLogin && userID !== user.authorID && user.registered && (
-                                        <div className='hidden group-hover:flex'>
-                                            {handleUpdatedAddFriend(user.authorID)}
-                                        </div>
-                                    )}
+                                    {isLogin && userID !== user.authorID && handleUpdatedAddFriend(user)}
                                 </div>
                             ))}
                         </div>
@@ -487,10 +493,10 @@ const ChatRoom = () => {
                                                     {messageContent.path ? (
                                                         <>
                                                             {messageContent.path.match(/\.(jpeg|jpg|png|gif|bmp)$/i) ? (
-                                                                <img className='w-64 h-auto' src={localNetwork + ':3001/files' + messageContent.path} alt={messageContent.message} />
+                                                                <img className='w-64 h-auto' src={localNetwork + '/files' + messageContent.path} alt={messageContent.message} />
                                                             )
                                                             : (
-                                                                <a href={localNetwork + ':3001/file/download' + messageContent.path}>{messageContent.message}</a>
+                                                                <a href={localNetwork + '/file/download' + messageContent.path}>{messageContent.message}</a>
                                                             )}
                                                         </>
                                                     )
@@ -512,6 +518,7 @@ const ChatRoom = () => {
                             })}
                         </ScrollToBottom>
                     </div>
+                    
                     <div className='flex-grow flex justify-center items-center p-3 relative border-t-4 border-white'>
                         <div 
                             className='flex justify-center items-center w-12 h-12 mr-2 bg-gray-200 rounded-full cursor-pointer'
@@ -531,6 +538,7 @@ const ChatRoom = () => {
                             type='text' 
                             placeholder='Type message here...' 
                             value={currentMessage}
+                            onClick={() => setShowPicker(false)}
                             onChange={(e) => { setCurrentMessage(e.target.value) }}
                             onKeyDown={(event) => event.key === 'Enter' && sendMessage()}
                             ref={focus}

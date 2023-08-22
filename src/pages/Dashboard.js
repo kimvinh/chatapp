@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
 import { SocketContext } from '../SocketContext';
@@ -7,6 +7,7 @@ import './Dashboard.css';
 import { localNetwork } from '../localNetwork';
 import ModalBox from '../Components/ModalBox';
 import { getCurrentTime } from './ChatRoom';
+import EmojiPicker from 'emoji-picker-react';
 
 const Avatar = ({ user, target }) => {
     if (user && !target) {
@@ -50,7 +51,10 @@ const Dashboard = () => {
     const [messageList, setMessageList] = useState([]);
     const [chatList, setChatList] = useState([]);
     const [target, setTarget] = useState(null);
-
+    const [showPicker, setShowPicker] = useState(false);
+    const [file, setFile] = useState(null);
+    const focus = useRef(null);
+    let fileInputRef = useRef(null);
     useEffect(() => {
         axios.get(`${localNetwork}/`)
             .then((response) => {
@@ -99,13 +103,42 @@ const Dashboard = () => {
 
     const sendMessage = async () => {
         if (currentMessage !== '') {
-            const messageData = {
-                roomID: conversationID,
-                authorID: userInfo._id,
-                authorName: userInfo.first_name + ' ' + userInfo.last_name,
-                message: currentMessage,
-                avatar: userInfo.avatar,
-                time: getCurrentTime()
+            let messageData = {};
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                try {
+                    const response = await axios.post(`${localNetwork}/file/upload`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+
+                    const filePath = response.data.filePath;
+
+                    messageData = {
+                        roomID: conversationID,
+                        authorName: userInfo.first_name + ' ' + userInfo.last_name,
+                        authorID: userInfo._id,
+                        message: currentMessage,
+                        avatar: userInfo.avatar,
+                        type: 'file',
+                        path: filePath, // Use the file path from the response
+                        time: getCurrentTime()
+                    };
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                messageData = {
+                    roomID: conversationID,
+                    authorID: userInfo._id,
+                    authorName: userInfo.first_name + ' ' + userInfo.last_name,
+                    message: currentMessage,
+                    avatar: userInfo.avatar,
+                    time: getCurrentTime()
+                }
             }
             await socket.emit("send_message", messageData);
             delete messageData.roomID;
@@ -114,6 +147,9 @@ const Dashboard = () => {
                 conversationID: conversationID
             });
             setCurrentMessage('');
+            setShowPicker(false);
+            setFile(null);
+            fileInputRef.current.value = null;
         }
     }
 
@@ -136,6 +172,19 @@ const Dashboard = () => {
         setConversationID(chat._id);
         setTarget(chat);
         fetchMessages(chat._id);
+    }
+
+    const handleEmojiSelect = (event) => {
+        focus.current.focus();
+        setCurrentMessage(currentMessage + event.emoji);
+    };
+
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setCurrentMessage(file.name);
+            setFile(file);
+        }
     }
 
     if (isLogin) {
@@ -214,7 +263,22 @@ const Dashboard = () => {
                                                                     className='w-8 h-8'
                                                                 />
                                                             </div>
-                                                            <p>{messageContent.message}</p>
+                                                            {messageContent.path ? (
+                                                                <>
+                                                                    {messageContent.path.match(/\.(jpeg|jpg|png|gif|bmp)$/i) ? (
+                                                                        <img className='w-64 h-auto' src={localNetwork + '/files' + messageContent.path} alt={messageContent.message} />
+                                                                    )
+                                                                    : (
+                                                                        <a href={localNetwork + '/file/download' + messageContent.path}>{messageContent.message}</a>
+                                                                    )}
+                                                                </>
+                                                            )
+                                                            :
+                                                            (
+                                                                    
+                                                                <p className='m-0 inline-block'>{messageContent.message}</p>
+                                                            )
+                                                            }
                                                         </div>
                                                     </div>
                                                     <div className='message-meta'>
@@ -227,16 +291,39 @@ const Dashboard = () => {
                                     </ScrollToBottom>
                                 </div>
                                 <div className='conversation-footer'>
+                                    <div 
+                                        className='flex justify-center items-center w-12 h-12 mr-2 bg-gray-200 rounded-full cursor-pointer'
+                                        onClick={() => fileInputRef.current.click()}
+                                    >
+                                            <i className="fa-solid fa-paperclip text-gray-500 text-lg"></i>
+                                    </div>
+                                    <input
+                                        className='hidden'
+                                        type='file'
+                                        accept='image/*, .pdf, .doc, .docx'
+                                        onChange={handleFileSelect}
+                                        ref={fileInputRef}
+                                    />
                                     <input 
                                         type='text'
                                         value={currentMessage}
-                                        placeholder='Type a message...' 
+                                        placeholder='Type a message...'
+                                        onClick={() => setShowPicker(false)} 
                                         onChange={(e) => setCurrentMessage(e.target.value)}
-                                        onKeyDown={(event) => event.key === 'Enter' && sendMessage()}   
+                                        onKeyDown={(event) => event.key === 'Enter' && sendMessage()}  
+                                        ref={focus} 
                                     />
                                     <span className='send-icon'>
+                                        <i 
+                                            className="fa-solid fa-icons mr-4 bg-gradient-to-r from-sky-500 to-indigo-500 text-transparent bg-clip-text cursor-pointer"
+                                            onClick={() => setShowPicker(!showPicker)}
+                                            onFocus={handleEmojiSelect}
+                                        ></i>
                                         <i className={`fa-solid fa-paper-plane ${currentMessage === '' ? 'disabled' : ''}`} onClick={sendMessage}></i>
                                     </span>
+                                </div>
+                                <div className='absolute bottom-20 right-5'>
+                                    {showPicker && <EmojiPicker onEmojiClick={handleEmojiSelect} />}
                                 </div>
                             </>
                         ) : (
