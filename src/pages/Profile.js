@@ -4,6 +4,7 @@ import axios from 'axios';
 import ModalBox from '../Components/ModalBox';
 import Warning from '../Components/Warning';
 import { localNetwork } from '../localNetwork';
+import { fetchRandomAvatar } from '../utils/avatarAPI';
 import './Profile.css';
 
 axios.defaults.withCredentials = true;
@@ -12,6 +13,7 @@ const Profile = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState({});
+    const [friends, setFriends] = useState([]);
     const [originalUserInfo, setOriginalUserInfo] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [showModalBox, setShowModalBox] = useState(false);
@@ -25,12 +27,13 @@ const Profile = () => {
 
     useEffect(() => {
         const filteredList = currentSearch
-        ? userInfo.friends.filter((friend) =>
-            friend.authorName.toLowerCase().includes(currentSearch.toLowerCase())
-        )
-        : userInfo.friends;
+        ? friends.filter((friend) => {
+            const fullName = friend.first_name + ' ' + friend.last_name;
+            return fullName.toLowerCase().includes(currentSearch.toLowerCase())
+        })
+        : friends;
         setFilteredFriends(filteredList);
-    }, [currentSearch, userInfo])
+    }, [currentSearch, friends])
 
     useEffect(() => {
         fetchUserInfo();
@@ -38,10 +41,12 @@ const Profile = () => {
 
     const fetchUserInfo = async () => {
         try {
+            // Fetch User Info
+            let user;
             await axios.get(`${localNetwork}/`)
                 .then((response) => {
                     if (response.data.loggedIn) {
-                        const user = response.data.user;
+                        user = response.data.user;
                         setUserInfo(user);
                         setOriginalUserInfo(user);
                         setIsLoggedIn(true);
@@ -50,6 +55,19 @@ const Profile = () => {
                 .catch((error) => {
                     console.log(error);
                 });
+
+            // Fetch User's Friend Info
+            const listFriends = user.friends;
+            for (let i = 0; i < listFriends.length; i++) {
+                const friendID = listFriends[i].friendID;
+                console.log(friendID);
+                const response = await axios.get(`${localNetwork}/friend`, {
+                    params: {
+                        friendID
+                    }
+                })
+                setFriends((prev) => [...prev, response.data]);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -116,12 +134,14 @@ const Profile = () => {
                         setUserInfo(response.data);
                     })
             } else {
-                axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
+                const response = await axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
                     userInfo
                 })
-                    .then((response) => {
-                        setUserInfo(response.data);
-                    })
+                const updatedUser = response.data;
+                setUserInfo(updatedUser);
+                await axios.patch(`${localNetwork}/api/conversation/update/${updatedUser._id}`, {
+                    updatedUser
+                })
                 setIsEditing(!isEditing);
             }
         }
@@ -130,7 +150,7 @@ const Profile = () => {
 
     const handleChat = async (friend) => {
         const user_1_id = userInfo._id;
-        const user_2_id = friend.authorID;
+        const user_2_id = friend._id;
         let conversationID = '';
         const response = await axios.get(`${localNetwork}/conversation`, {
             params: {
@@ -150,7 +170,7 @@ const Profile = () => {
                     },
                     {
                         userID: user_2_id,
-                        username: friend.authorName,
+                        username: friend.first_name + ' ' + friend.last_name,
                         avatar: friend.avatar
                     }
                 ]
@@ -166,13 +186,29 @@ const Profile = () => {
         setTartget(friend);
         setShowModalBox(true);
     }
+
+    const handleChangeAvatar = async () => {
+        const randomNumber = Math.floor(Math.random() * 10001); 
+        const result = await fetchRandomAvatar(randomNumber);
+        if (result) {
+            userInfo.avatar = result;
+            const response = await axios.patch(`${localNetwork}/users/update/${userInfo._id}`, {
+                userInfo
+            })
+            const updatedUser = response.data;
+            setUserInfo(updatedUser);
+            await axios.patch(`${localNetwork}/api/conversation/update/${updatedUser._id}`, {
+                updatedUser
+            })
+        }
+    }
     
     if (isLoggedIn && filteredFriends) {
         return (
             <div className='profile'>
                 <div className='user-avatar-friends'>
                     <div className='user-avatar'>
-                        <div className='avatar-frame'>
+                        <div className='avatar-frame' onClick={handleChangeAvatar}>
                             <img 
                                 src={`data:image/svg+xml;utf8,${encodeURIComponent(userInfo.avatar)}`}
                                 alt="User's Avatar"
@@ -215,7 +251,7 @@ const Profile = () => {
                                         />
                                     </div>
                                     <div className='friend-name'>
-                                        <p>{friend.authorName}</p>
+                                        <p>{friend.first_name + ' ' + friend.last_name}</p>
                                     </div>
                                     <div className='options-circle' title='Send a message' onClick={() => handleChat(friend)}>
                                         <i className="fa-regular fa-message"></i>

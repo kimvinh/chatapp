@@ -136,7 +136,7 @@ const ChatRoom = () => {
                     delete friendRequest.beingRequested.userSocketID;
                     axios.post(`${localNetwork}/addfriend`, {
                         userID,
-                        friendInfo: friendRequest.beingRequested
+                        friendInfo: friendRequest.beingRequested.authorID
                     })
                         .then((response) => {
                             console.log(response);
@@ -156,7 +156,7 @@ const ChatRoom = () => {
                     delete friendRequest.requestedFrom.userSocketID;
                     axios.post(`${localNetwork}/addfriend`, {
                         userID,
-                        friendInfo: friendRequest.requestedFrom
+                        friendInfo: friendRequest.requestedFrom.authorID
                     })
                         .then((response) => {
                             console.log(response);
